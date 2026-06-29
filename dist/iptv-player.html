@@ -591,7 +591,6 @@
       })
       .catch(function(){
         mergeFromJson(getChannelsFromLovelace());
-        mergeFromJson(loadPersistentCustomChannels());
       })
       .then(function(){ initPlayer(); });
 
