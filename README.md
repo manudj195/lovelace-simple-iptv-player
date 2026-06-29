@@ -26,7 +26,7 @@ Then add the resource in Home Assistant:
 
 ```yaml
 url: /local/simple-iptv-player/simple-iptv-player.js
-type: module
+type: plugin
 ```
 
 ## Demo Image
