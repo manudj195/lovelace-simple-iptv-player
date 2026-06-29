@@ -570,15 +570,28 @@
         return [];
       }
     }
+
+   function loadPersistentCustomChannels() {
+      try {
+        const res = await fetch('/local/simple-iptv-player-urls.json');
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch (e) {
+        return [];
+      }
+    }
     
     fetch('urls.json')
       .then(function(r){ return r.json(); })
       .then(function(data){
         mergeFromJson(Array.isArray(data) ? data : []);
         mergeFromJson(getChannelsFromLovelace());
+        mergeFromJson(loadPersistentCustomChannels());
       })
       .catch(function(){
         mergeFromJson(getChannelsFromLovelace());
+        mergeFromJson(loadPersistentCustomChannels());
       })
       .then(function(){ initPlayer(); });
 
