@@ -110,6 +110,18 @@
                 this.requestFullscreen?.() || this.webkitRequestFullscreen?.() || this.mozRequestFullScreen?.() || this.msRequestFullscreen?.();
               }
             "
+          ontouchend="
+            if (this.dataset.lastTap && Date.now() - this.dataset.lastTap < 300) {
+              if (this.webkitEnterFullscreen) {
+                this.webkitEnterFullscreen();
+              } else if (this.requestFullscreen) {
+                this.requestFullscreen();
+              }
+              this.dataset.lastTap = '';
+            } else {
+              this.dataset.lastTap = Date.now();
+            }
+          "
           ></video>
         <div class="top-overlay">
           <div class="channel-chip"><span class="status-dot"></span><span id="currentTitle" class="channel-name">Nessun canale selezionato</span></div>
