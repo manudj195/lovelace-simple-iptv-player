@@ -558,7 +558,8 @@
       fetchAndLoadPlaylist(activePl.url);
     }
 
-    // Carica urls.json e merge, poi avvia
+    
+// Carica canali extra passati da Lovelace
 function getChannelsFromLovelace() {
   const params = new URLSearchParams(window.location.search);
   const raw = params.get('channels');
@@ -571,29 +572,44 @@ function getChannelsFromLovelace() {
   }
 }
 
-function loadJson(url) {
-  return fetch(url).then(function(r) {
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  });
+// Carica il file persistente dell’utente da /local/
+// Formato atteso: array di oggetti { name, url, group?, logo? }
+function getChannelsFromLocalFile() {
+  return fetch('/local/simple-iptv-player-urls.json')
+    .then(function(r) {
+      if (!r.ok) throw new Error('not found');
+      return r.json();
+    })
+    .then(function(data) {
+      return Array.isArray(data) ? data : [];
+    })
+    .catch(function() {
+      return [];
+    });
 }
 
 Promise.all([
-  loadJson('urls.json').catch(function(){ return []; }),
-  loadJson('/local/simple-iptv-player-urls.json').catch(function(){ return []; })
-])
-  .then(function(results) {
-    var bundled = Array.isArray(results[0]) ? results[0] : [];
-    var localDefaults = Array.isArray(results[1]) ? results[1] : [];
-    var lovelaceChannels = getChannelsFromLovelace();
+  fetch('urls.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      return Array.isArray(data) ? data : [];
+    })
+    .catch(function() {
+      return [];
+    }),
+  getChannelsFromLocalFile(),
+  Promise.resolve(getChannelsFromLovelace())
+]).then(function(results) {
+  var bundled = results[0];
+  var localFile = results[1];
+  var lovelace = results[2];
 
-    mergeFromJson(bundled);
-    mergeFromJson(localDefaults);
-    mergeFromJson(lovelaceChannels);
-  })
-  .then(function() {
-    initPlayer();
-  });
+  mergeFromJson(bundled);
+  mergeFromJson(localFile);
+  mergeFromJson(lovelace);
+
+  initPlayer();
+});
 
     document.getElementById('exportBtn').addEventListener('click', function() {
       var data = JSON.stringify(playlists, null, 2);
