@@ -104,10 +104,10 @@
       <div class="video-wrap">
         <video id="video" playsinline autoplay muted 
           ondblclick="
-              if (document.fullscreenElement) {
-                document.exitFullscreen();
+              if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+                document.exitFullscreen?.() || document.webkitExitFullscreen?.() || document.mozCancelFullScreen?.() || document.msExitFullscreen?.();
               } else {
-                this.requestFullscreen();
+                this.requestFullscreen?.() || this.webkitRequestFullscreen?.() || this.mozRequestFullScreen?.() || this.msRequestFullscreen?.();
               }
             "
           ></video>
