@@ -559,40 +559,41 @@
     }
 
     // Carica urls.json e merge, poi avvia
-    function getChannelsFromLovelace() {
-      const params = new URLSearchParams(window.location.search);
-      const raw = params.get('channels');
-      if (!raw) return [];
-      try {
-        const data = JSON.parse(decodeURIComponent(raw));
-        return Array.isArray(data) ? data : [];
-      } catch (e) {
-        return [];
-      }
-    }
+function getChannelsFromLovelace() {
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get('channels');
+  if (!raw) return [];
+  try {
+    const data = JSON.parse(decodeURIComponent(raw));
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    return [];
+  }
+}
 
-   function loadPersistentCustomChannels() {
-      try {
-        const res = await fetch('/local/simple-iptv-player-urls.json');
-        if (!res.ok) return [];
-        const data = await res.json();
-        return Array.isArray(data) ? data : [];
-      } catch (e) {
-        return [];
-      }
-    }
-    
-    fetch('urls.json')
-      .then(function(r){ return r.json(); })
-      .then(function(data){
-        mergeFromJson(Array.isArray(data) ? data : []);
-        mergeFromJson(getChannelsFromLovelace());
-        mergeFromJson(loadPersistentCustomChannels());
-      })
-      .catch(function(){
-        mergeFromJson(getChannelsFromLovelace());
-      })
-      .then(function(){ initPlayer(); });
+function loadJson(url) {
+  return fetch(url).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  });
+}
+
+Promise.all([
+  loadJson('urls.json').catch(function(){ return []; }),
+  loadJson('/local/simple-iptv-player-urls.json').catch(function(){ return []; })
+])
+  .then(function(results) {
+    var bundled = Array.isArray(results[0]) ? results[0] : [];
+    var localDefaults = Array.isArray(results[1]) ? results[1] : [];
+    var lovelaceChannels = getChannelsFromLovelace();
+
+    mergeFromJson(bundled);
+    mergeFromJson(localDefaults);
+    mergeFromJson(lovelaceChannels);
+  })
+  .then(function() {
+    initPlayer();
+  });
 
     document.getElementById('exportBtn').addEventListener('click', function() {
       var data = JSON.stringify(playlists, null, 2);
