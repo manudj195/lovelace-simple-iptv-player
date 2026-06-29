@@ -2,7 +2,7 @@
 
 Simple IPTV Player is a custom Lovelace card for Home Assistant that plays IPTV streams directly in your dashboard.
 
-[![Add to My Home Assistant](https://my.home-assistant.io/badges/redirect.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=manudj195/simple-iptv-player-package)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=manudj195&repository=simple-iptv-player-package&category=lovelace)
 
 ## Installation with HACS
 
