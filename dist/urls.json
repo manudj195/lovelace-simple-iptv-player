@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Default",
+    "url": "https://maginetweb-arch.github.io/tileoplayer/tvita.m3u"
+  },
+  {
+    "name": "TVITALIA",
+    "url": "https://raw.githubusercontent.com/maginetweb-arch/TVITALIA/refs/heads/main/iptvit.m3u"
+  }
+]
