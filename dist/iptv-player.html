@@ -102,7 +102,15 @@
     </header>
     <main class="player-shell">
       <div class="video-wrap">
-        <video id="video" playsinline autoplay muted></video>
+        <video id="video" playsinline autoplay muted 
+          ondblclick="
+              if (document.fullscreenElement) {
+                document.exitFullscreen();
+              } else {
+                this.requestFullscreen();
+              }
+            "
+          ></video>
         <div class="top-overlay">
           <div class="channel-chip"><span class="status-dot"></span><span id="currentTitle" class="channel-name">Nessun canale selezionato</span></div>
         </div>
