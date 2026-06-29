@@ -559,11 +559,28 @@
     }
 
     // Carica urls.json e merge, poi avvia
+    function getChannelsFromLovelace() {
+      const params = new URLSearchParams(window.location.search);
+      const raw = params.get('channels');
+      if (!raw) return [];
+      try {
+        const data = JSON.parse(decodeURIComponent(raw));
+        return Array.isArray(data) ? data : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    
     fetch('urls.json')
-      .then(function(r) { return r.json(); })
-      .then(function(data) { mergeFromJson(Array.isArray(data) ? data : []); })
-      .catch(function() {})
-      .then(function() { initPlayer(); });
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        mergeFromJson(Array.isArray(data) ? data : []);
+        mergeFromJson(getChannelsFromLovelace());
+      })
+      .catch(function(){
+        mergeFromJson(getChannelsFromLovelace());
+      })
+      .then(function(){ initPlayer(); });
 
     document.getElementById('exportBtn').addEventListener('click', function() {
       var data = JSON.stringify(playlists, null, 2);
