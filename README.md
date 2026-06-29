@@ -1,12 +1,32 @@
 # Simple IPTV Player
 
-A simple Lovelace card for Home Assistant that plays IPTV streams directly in your dashboard.
+Simple IPTV Player is a custom Lovelace card for Home Assistant that plays IPTV streams directly in your dashboard.
 
-## Installation via HACS
+[![Add to My Home Assistant](https://my.home-assistant.io/badges/redirect.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=manudj195/simple-iptv-player-package)
 
-1. Add this repository in HACS as a custom Lovelace repository.
-2. Install **Simple IPTV Player**.
-3. Reload the browser.
+## Installation with HACS
+
+1. Open HACS.
+2. Add this repository as a custom repository with category **Lovelace**.
+3. Install **Simple IPTV Player**.
+4. Reload Home Assistant or refresh the browser cache.
+
+## Manual installation
+
+If you do not want to use HACS, copy the files from the `dist/` folder into your Home Assistant `www` folder.
+
+Example path:
+
+```text
+config/www/simple-iptv-player/
+```
+
+Then add the resource in Home Assistant:
+
+```yaml
+url: /local/simple-iptv-player/simple-iptv-player.js
+type: module
+```
 
 ## Configuration
 
@@ -23,14 +43,33 @@ urls:
 
 ## Default channels
 
-The packaged default list is stored in:
+The bundled default list is included in:
 
-`config/www/community/lovelace-simple-iptv-player/urls.json`
+```text
+config/www/community/lovelace-simple-iptv-player/urls.json
+```
 
-You can edit it directly to change the bundled default channels.
+You can edit it directly in the repository if you want to change the defaults.
 
-If you want persistent custom channels that survive HACS updates, create:
+## Persistent custom channels
 
-`config/www/simple-iptv-player-urls.json`
+If you want user-defined default channels that survive HACS updates, create this file:
 
-That file has priority over the bundled one and will not be overwritten by HACS updates.
+```text
+config/www/simple-iptv-player-urls.json
+```
+
+That file has priority over the bundled one and is never overwritten by HACS updates.
+
+## Files included in the package
+
+- `dist/simple-iptv-player.js`
+- `dist/iptv-player.html`
+- `dist/urls.json`
+- `dist/hls.min.js`
+- `dist/dash.all.min.js`
+
+## Notes
+
+- `urls:` in the card config adds extra streams at runtime.
+- `simple-iptv-player-urls.json` is the recommended place for permanent local customization.
